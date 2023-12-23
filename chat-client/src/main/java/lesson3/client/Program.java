@@ -17,7 +17,8 @@ public class Program {
             InetAddress inetAddress = socket.getInetAddress();
             System.out.println("InetAddress: " + inetAddress +
                     "\nRemote IP: " + inetAddress.getHostAddress() +
-                    "\nLocalPort:" + socket.getLocalPort());
+                    "\nLocalPort:" + socket.getLocalPort()+
+                    "\nType @ before name for private message");
 
             Client client = new Client(socket, name);
             client.listenForMessage();
