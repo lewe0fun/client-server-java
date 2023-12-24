@@ -42,19 +42,38 @@ public class ClientManager implements Runnable {
 
     /**
      * Ретрансляция сообщений другим
+     * name - от кого
+     * client.name - кому
      */
     private void broadcastMessage(String message) {
+        boolean pm;
+        boolean dpm;
         for (ClientManager client : clients) {
+            pm = false;
+            dpm = false;
             try {
-                    if (!client.name.equals(name))//проверка на свои сообщения
+                Character ch = message.split(" ")[1].charAt(0);
+                if (ch.equals('@')) pm = true;
+                if ((message.split(" ")[1].equals("@" + client.name))) {
+                    System.out.println("Клиент: " + name + " написал в приват клиенту: " + client.name);
+                    dpm = true;
+                }
+
+
+                if (!client.name.equals(name)&&pm)//проверка на свои сообщения
+                {
+                    if (dpm)//проверка на приватные сообщения типа: @name
                     {
-                       if (message.split(" ")[1].equals("@" + client.name))//проверка на приватные сообщения типа: @name
-                       {
-                           client.bufferedWriter.write(message);
-                           client.bufferedWriter.newLine();
-                           client.bufferedWriter.flush();
-                        }
+                        client.bufferedWriter.write( message);
+                        client.bufferedWriter.newLine();
+                        client.bufferedWriter.flush();
                     }
+                }
+                else if (!client.name.equals(name)){
+                    client.bufferedWriter.write(message);
+                    client.bufferedWriter.newLine();
+                    client.bufferedWriter.flush();
+                }
             } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);
             }
